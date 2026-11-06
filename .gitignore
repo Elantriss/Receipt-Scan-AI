@@ -9,7 +9,17 @@ wheels/
 .env
 __pycache__/
 *.pyc
+
+# Read Me
 README.md
 
 # Virtual environments
 .venv
+
+# Source
+**/imagens/
+
+# Data Base
+*.db
+*.sqlite
+*.sqlite3
