@@ -4,6 +4,7 @@ from google import genai
 from google.genai import types
 from pydantic import BaseModel, Field
 from decimal import Decimal
+from database import SessionLocal, ReciptModel
 
 load_dotenv()
 
@@ -32,11 +33,32 @@ def extract_data(image: str):
 
     return response.text
 
+def save_recipt(data):
+    session = SessionLocal()
+
+    try:
+        new_recipt = ReciptModel(
+            company=data.company,
+            total_value=data.total_value,
+            date=data.date
+        )
+        session.add(new_recipt)
+        session.commit()
+        print('Data saved successfully')
+
+    except Exception as e:
+        session.rollback()
+        print('Error saving to the database: {e}')
+
+    finally:
+        session.close()
+
 if __name__ == "__main__" :
     image_path = '/home/elantris/Projetos/recipt-scan-ai/images/nota-1.pdf'
 
     if os.path.exists(image_path):
         result = extract_data(image_path)
+        save_recipt(result)
         print('--- Resultado Extraído pela IA ---')
         print(result)
 
